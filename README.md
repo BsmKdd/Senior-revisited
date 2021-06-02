@@ -1,0 +1,1 @@
+This is the project that aims at remaking the senior project in Nodejs/express/reactjs as practice for full stack development.
