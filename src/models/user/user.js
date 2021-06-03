@@ -83,6 +83,11 @@ userSchema.virtual('user_types', { ref: 'Member', localField: '_id', foreignFiel
 userSchema.virtual('user_types', { ref: 'Coach', localField: '_id', foreignField: 'user'})
 userSchema.virtual('user_types', { ref: 'Bartender', localField: '_id', foreignField: 'user'})
 
+// Connecting with the orders
+userSchema.virtual('.././menu_orders/order', { ref: 'Member', localField: '_id', foreignField: 'memberID'})
+userSchema.virtual('.././menu_orders/order', { ref: 'Bartender', localField: '_id', foreignField: 'bartenderID'})
+
+
 // Customizing built-in functionality, removing data we don't want returned.
 userSchema.methods.toJSON = function() {
     const user = this

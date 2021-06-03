@@ -2,9 +2,11 @@ const mongoose = require('mongoose')
 
 
 const workoutSchema = new mongoose.Schema({
-    moves: [{
+    moves:[{
         move: {
-            type: Number
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'move'
         }
     }]
 })

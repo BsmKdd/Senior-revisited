@@ -38,7 +38,6 @@ const coachSchema = new mongoose.Schema({
         required: true,
         ref: 'User'
     }
-
 })
 
 //Bartender schema
