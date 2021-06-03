@@ -2,15 +2,40 @@ const express = require('express')
 // const multer = require('multer')
 // const shapr = require('sharp')
 const User = require('../models/user/user')
+const { Admin, Member, Coach, Bartender } = require('../models/user/user_types')
 const auth  = require('../middleware/auth')
 const permit  = require('../middleware/permit')
 const router = new express.Router()
 
-// Create new user
-router.post('/users', async (req, res) => {
+// Create new admin
+router.post('/admins', async (req, res) => {
     const user = new User(req.body)
+    user.userType = "Admin"
+    const admin = new Admin({
+            user
+        })
     try{
         await user.save()
+        await admin.save()
+        // Send welcome email goes here
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}) 
+
+// Create new member
+router.post('/members', async (req, res) => {
+    const user = new User(req.body)
+    user.userType = "Member"
+    const member = new Member({
+            status: req.body.status,
+            user
+        })
+    try{
+        await user.save()
+        await member.save()
         // Send welcome email goes here
         const token = await user.generateAuthToken()
         res.status(201).send({ user, token})
@@ -18,6 +43,46 @@ router.post('/users', async (req, res) => {
         res.status(400).send(e)
     }
 }) 
+
+// Create new coach
+router.post('/coaches', async (req, res) => {
+    const user = new User(req.body)
+    user.userType = "Coach"
+    const coach = new Coach({
+            salary: req.body.salary,
+            expertises: req.body.expertises,
+            user
+        })
+    try{
+        await user.save()
+        await coach.save()
+        // Send welcome email goes here
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token, coach })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}) 
+
+// Create new bartender
+router.post('/bartenders', async (req, res) => {
+    const user = new User(req.body)
+    user.userType = "Bartender"
+    const bartender = new Bartender({
+            salary: req.body.salary,
+            user
+        })
+    try{
+        console.log(user)
+        await user.save()
+        await bartender.save()
+        // Send welcome email goes here
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
 
 // Login
 router.post('/users/login', async(req, res) => {

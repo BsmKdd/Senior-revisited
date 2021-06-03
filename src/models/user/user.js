@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { Member, Coach, Bartender } = require('./user_types')
+const { Admin, Member, Coach, Bartender } = require('./user_types')
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -64,7 +64,9 @@ const userSchema = new mongoose.Schema({
     userType: {
         type: String,
         required: true,
-        default: 'Member'
+        default: 'Member',
+        enum: ['Admin', 'Member', 'Coach', 'Bartender'],
+        immutable: true
     },
     tokens: [{
         token: {
@@ -81,8 +83,7 @@ userSchema.virtual('user_types', { ref: 'Member', localField: '_id', foreignFiel
 userSchema.virtual('user_types', { ref: 'Coach', localField: '_id', foreignField: 'user'})
 userSchema.virtual('user_types', { ref: 'Bartender', localField: '_id', foreignField: 'user'})
 
-
-// Customizing built-in functionality
+// Customizing built-in functionality, removing data we don't want returned.
 userSchema.methods.toJSON = function() {
     const user = this
     const userObject = user.toObject()
@@ -109,10 +110,9 @@ userSchema.methods.generateAuthToken = async function () {
 // Hash password before saving
 userSchema.pre('save', async function (next) {
     const user = this
-
-    if(user.isModified('userType')) {
-        throw 'userType is read only!'
-    }
+    // if(user.isModified('userType')) {
+    //     throw 'userType is read only!'
+    // }
 
     if(user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
@@ -121,7 +121,7 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-// Finding an user by email
+// Finding a user by email
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
     if(!user) {
