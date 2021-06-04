@@ -162,7 +162,7 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 // Admin delete [Admin]
-router.delete('/users/:id', auth, permit('Admin'), async (req, res) => {
+router.delete('/users/:id', auth, permit(), async (req, res) => {
     try{
         user = await User.findOneAndDelete({ _id: req.params.id })
 
@@ -177,7 +177,7 @@ router.delete('/users/:id', auth, permit('Admin'), async (req, res) => {
 })
 
 // Get all the users [Admin]
-router.get('/users', auth, permit('Admin'), async (req, res) => {
+router.get('/users', auth, permit(), async (req, res) => {
     try{
         users = await User.find({ }).limit()
         res.send(users)

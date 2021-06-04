@@ -29,6 +29,15 @@ const machineSchema = new mongoose.Schema({
 
 machineSchema.virtual('move', { ref: 'Move', localField: '_id', foreignField: 'machine'})
 
+machineSchema.methods.toJSON = function () {
+    const machine = this
+    const machineObject = machine.toObject()
+
+    delete machineObject.machineImage
+
+    return machineObject
+}
+
 const Machine = mongoose.model('Machine', machineSchema)
 
 module.exports = Machine
