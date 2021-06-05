@@ -29,14 +29,14 @@ const machineSchema = new mongoose.Schema({
 
 machineSchema.virtual('move', { ref: 'Move', localField: '_id', foreignField: 'machine'})
 
-machineSchema.methods.toJSON = function () {
-    const machine = this
-    const machineObject = machine.toObject()
+// machineSchema.methods.toJSON = function () {
+//     const machine = this
+//     const machineObject = machine.toObject()
 
-    delete machineObject.machineImage
+//     delete machineObject.machineImage
 
-    return machineObject
-}
+//     return machineObject
+// }
 
 const Machine = mongoose.model('Machine', machineSchema)
 

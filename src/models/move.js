@@ -15,8 +15,7 @@ const moveSchema = new mongoose.Schema({
         muscleGroup:{
             type: String,
             default: 'Core',
-            enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms'],
-            immutable: true
+            enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']
         }
     }],
     moveDifficulty: {

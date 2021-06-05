@@ -21,11 +21,7 @@ router.post('/machines', auth, permit(''), async (req, res) => {
 router.get('/machines', auth, async (req, res) => {
     try{
         machines = await Machine.find({ }).limit()
-        // console.log(Object.keys(machines))
-        // machines.forEach((machine) => {
-        //     delete machine.machineImage
-        //     console.log(machine)
-        // } )
+
         res.send(machines)
     } catch (e) {
         console.log(e)
@@ -70,12 +66,30 @@ router.post('/machines/:id/machineImage', auth, permit(), upload.single('machine
     res.status(400).send({ error: error.message })
 })
 
-
 router.delete('/machines/:id/machineImage', auth, permit(), async (req, res) => {
     const machine = await Machine.findById(req.params.id)
     machine.machineImage = undefined
     await machine.save()
     res.send()
+})
+
+router.patch('/machines/:id', auth, permit(''), async (req, res) => {
+    const updates = Object.keys(req.body)
+
+    try{
+        const machine = await Machine.findOne({ _id: req.params.id })
+
+        if(!machine){
+            return res.status(404).send()
+        }
+
+        updates.forEach((update) => machine[update] = req.body[update])
+        await machine.save()
+
+        res.send(machine)
+    } catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 router.get('/machines/:id/machineImage', async (req, res) => {
