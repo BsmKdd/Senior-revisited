@@ -67,6 +67,10 @@ router.post('/moves/:id/moveImages', auth, permit(), upload.fields([
     const images = req.files 
     const move = await Move.findById(req.params.id)
 
+    if(!move){
+        return res.status(404).send()
+    }
+
     if(images.moveImage1) {
         const image1 = images.moveImage1[0].buffer
         const buffer1 = await sharp(image1).resize({ width: 250, height: 250 }).png().toBuffer()
@@ -90,6 +94,48 @@ router.post('/moves/:id/moveImages', auth, permit(), upload.fields([
     res.send("Image(s) uploaded")
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })
+})
+
+router.patch('/moves/:id', auth, permit(''), upload.fields([
+    { name: 'moveImage1', maxCount: 1 }, 
+    { name: 'moveImage2', maxCount: 1 }, 
+    { name: 'moveGif', maxCount: 1 }]), async (req, res) => {
+    const updates = Object.keys(req.body)
+
+    try{
+        const images = req.files 
+        const move = await Move.findById(req.params.id)
+
+        if(!move){
+            return res.status(404).send()
+        }
+
+        updates.forEach((update) => move[update] = req.body[update])
+
+        if(images.moveImage1) {
+            const image1 = images.moveImage1[0].buffer
+            const buffer1 = await sharp(image1).resize({ width: 250, height: 250 }).png().toBuffer()
+            move.moveImage1 = buffer1
+        }
+    
+        if(images.moveImage2) {
+            const image2 = images.moveImage2[0].buffer
+            const buffer2 = await sharp(image2).resize({ width: 250, height: 250 }).png().toBuffer()
+            move.moveImage2 = buffer2
+        }
+    
+        if(images.moveGif) {
+            const gif = images.moveGif[0].buffer
+            // const buffer3 = await sharp(gif, {animated: true}).resize({ width:250, height: 250 }).toBuffer()
+            move.moveGif = gif
+        }
+
+        await move.save()
+
+        res.send(move)
+    } catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 router.get('/moves', auth, async (req, res) => {

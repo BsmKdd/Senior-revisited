@@ -11,13 +11,17 @@ const moveSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    muscleGroups: [{
-        muscleGroup:{
-            type: String,
-            default: 'Core',
-            enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']
-        }
-    }],
+    // muscleGroups: [{
+    //     muscleGroup:{
+    //         type: String,
+    //         default: 'Core',
+    //         enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']
+    //     }
+    // }],
+    muscleGroups: {
+        type: [String],
+        enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']        
+    },
     moveDifficulty: {
         type: String,
         default: 'Beginner',
