@@ -2,10 +2,8 @@ const express = require('express')
 const multer = require('multer')
 const sharp = require('sharp')
 const Move = require('../models/move')
-const Machine = require('../models/machine')
 const auth  = require('../middleware/auth')
 const permit  = require('../middleware/permit')
-const im = require('imagemagick')
 
 const router = new express.Router()
 
@@ -150,13 +148,12 @@ router.get('/moves', auth, async (req, res) => {
 })
 
 // Get the machine that a move is performed on
-router.get('/machines/:id', auth, async (req, res) => {
+router.get('/moveMachine/:id', auth, async (req, res) => {
     try{
-        machine = await Machine.findOne({ _id: req.params.id })
-
-        res.send(machine)
+        const move = await Move.findById(req.params.id)
+        await move.populate('moveMachine').execPopulate()
+        res.send(move.moveMachine)
     } catch (e) {
-        console.log(e)
         res.status(500).send(e)
     }
 })
@@ -172,47 +169,6 @@ router.delete('/moves/:id', auth, permit('Admin'), async (req, res) => {
         res.send(move)
     } catch (e) {
         res.status(500).send(e)
-    }
-})
-
-router.delete('/machines/:id/machineImage', auth, permit(), async (req, res) => {
-    const machine = await Machine.findById(req.params.id)
-    machine.machineImage = undefined
-    await machine.save()
-    res.send()
-})
-
-router.patch('/machines/:id', auth, permit(''), async (req, res) => {
-    const updates = Object.keys(req.body)
-
-    try{
-        const machine = await Machine.findOne({ _id: req.params.id })
-
-        if(!machine){
-            return res.status(404).send()
-        }
-
-        updates.forEach((update) => machine[update] = req.body[update])
-        await machine.save()
-
-        res.send(machine)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.get('/machines/:id/machineImage', async (req, res) => {
-    try {
-        const machine = await Machine.findById(req.params.id)
-
-        if (!machine || !machine.machineImage){
-            throw new Error()
-        }
-
-        res.set('Content-Type', 'image/png')
-        res.send(machine.machineImage)
-    } catch (e) {
-        res.status(404).send()
     }
 })
 

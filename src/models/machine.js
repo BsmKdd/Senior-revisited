@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 
-
 const machineSchema = new mongoose.Schema({
     machineName: {
         type: String,
@@ -27,7 +26,11 @@ const machineSchema = new mongoose.Schema({
     
 })
 
-machineSchema.virtual('move', { ref: 'Move', localField: '_id', foreignField: 'machine'})
+machineSchema.virtual('machineMove', { 
+    ref: 'Move', 
+    localField: '_id', 
+    foreignField: 'machine'
+})
 
 // machineSchema.methods.toJSON = function () {
 //     const machine = this

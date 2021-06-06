@@ -11,13 +11,6 @@ const moveSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // muscleGroups: [{
-    //     muscleGroup:{
-    //         type: String,
-    //         default: 'Core',
-    //         enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']
-    //     }
-    // }],
     muscleGroups: {
         type: [String],
         enum: ['Core', 'Legs', 'Chest', 'Calves', 'Triceps', 'Biceps', 'Back', 'Forearms']        
@@ -44,7 +37,17 @@ const moveSchema = new mongoose.Schema({
     },
 })
 
-moveSchema.virtual('./workout/workout', { ref: 'Workout', localField: '_id', foreignField: 'move'})
+// moveSchema.virtual('./workout/workout', { 
+//     ref: 'Workout', 
+//     localField: '_id', 
+//     foreignField: 'move'
+// })
+
+moveSchema.virtual('moveMachine', {
+     ref: 'Machine', 
+     localField: 'machine', 
+     foreignField: '_id'
+})
 
 const Move = mongoose.model('Move', moveSchema)
 

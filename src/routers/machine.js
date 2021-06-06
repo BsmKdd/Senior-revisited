@@ -14,7 +14,7 @@ router.post('/machines', auth, permit(''), async (req, res) => {
         
         res.status(201).send(machine)
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send({ error: e.message })
     }
 }) 
 
@@ -25,6 +25,22 @@ router.get('/machines', auth, async (req, res) => {
         res.send(machines)
     } catch (e) {
         console.log(e)
+        res.status(500).send(e)
+    }
+})
+
+router.get('/machineMoves/:id', auth, async (req, res) => {
+    try{
+        const machine = await Machine.findById(req.params.id)
+        await machine.populate('machineMove').execPopulate()
+
+        machine.machineMove.forEach((move) => {
+            move.moveImage2 = undefined
+            move.moveGif = undefined
+        })
+
+        res.send(machine.machineMove)
+    } catch (e) {
         res.status(500).send(e)
     }
 })
