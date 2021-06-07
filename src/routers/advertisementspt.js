@@ -50,116 +50,62 @@ router.post('/advertisements', auth, permit(''), upload.fields([
     }
 })
 
-router.post('/moves/:id/moveImages', auth, permit(), upload.fields([
-    { name: 'moveImage1', maxCount: 1 }, 
-    { name: 'moveImage2', maxCount: 1 }, 
-    { name: 'moveGif', maxCount: 1 }]), async (req, res) => {
-    
-    const images = req.files 
-    const move = await Move.findById(req.params.id)
+router.patch('/advertisements/:id', auth, permit(''), upload.fields([
+    { name: 'adImage', maxCount: 1 }, 
+    { name: 'adBanner', maxCount: 1 }]), async (req, res) => {
 
-    if(!move){
-        return res.status(404).send()
-    }
-
-    if(images.moveImage1) {
-        const image1 = images.moveImage1[0].buffer
-        const buffer1 = await sharp(image1).resize({ width: 250, height: 250 }).png().toBuffer()
-        move.moveImage1 = buffer1
-    }
-
-    if(images.moveImage2) {
-        const image2 = images.moveImage2[0].buffer
-        const buffer2 = await sharp(image2).resize({ width: 250, height: 250 }).png().toBuffer()
-        move.moveImage2 = buffer2
-    }
-
-    if(images.moveGif) {
-        const gif = images.moveGif[0].buffer
-        // const buffer3 = await sharp(gif, {animated: true}).resize({ width:250, height: 250 }).toBuffer()
-        move.moveGif = gif
-    }
-
-    await move.save()
-
-    res.send("Image(s) uploaded")
-}, (error, req, res, next) => {
-    res.status(400).send({ error: error.message })
-})
-
-router.patch('/moves/:id', auth, permit(''), upload.fields([
-    { name: 'moveImage1', maxCount: 1 }, 
-    { name: 'moveImage2', maxCount: 1 }, 
-    { name: 'moveGif', maxCount: 1 }]), async (req, res) => {
     const updates = Object.keys(req.body)
 
     try{
         const images = req.files 
-        const move = await Move.findById(req.params.id)
+        const advert = await AdvertisementsPT.findById(req.params.id)
 
-        if(!move){
+        if(!advert){
             return res.status(404).send()
         }
 
-        updates.forEach((update) => move[update] = req.body[update])
+        updates.forEach((update) => advert[update] = req.body[update])
 
-        if(images.moveImage1) {
-            const image1 = images.moveImage1[0].buffer
-            const buffer1 = await sharp(image1).resize({ width: 250, height: 250 }).png().toBuffer()
-            move.moveImage1 = buffer1
+        if(images.adImage) {
+            const image = images.adImage[0].buffer
+            const buffer = await sharp(image).resize({ width: 250, height: 250 }).png().toBuffer()
+            advert.image = buffer
         }
     
-        if(images.moveImage2) {
-            const image2 = images.moveImage2[0].buffer
-            const buffer2 = await sharp(image2).resize({ width: 250, height: 250 }).png().toBuffer()
-            move.moveImage2 = buffer2
-        }
-    
-        if(images.moveGif) {
-            const gif = images.moveGif[0].buffer
-            // const buffer3 = await sharp(gif, {animated: true}).resize({ width:250, height: 250 }).toBuffer()
-            move.moveGif = gif
+        if(images.adBanner) {
+            const banner = images.adBanner[0].buffer
+            const buffer = await sharp(banner).resize({ width: 250, height: 250 }).png().toBuffer()
+            advert.banner = buffer
         }
 
-        await move.save()
+        await advert.save()
 
-        res.send(move)
+        res.send(advert)
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send({error: e.message})
     }
 })
 
-router.get('/moves', auth, async (req, res) => {
+router.get('/advertisements', auth, async (req, res) => {
     try{
-        moves = await Move.find({ }).limit()
+        adverts = await AdvertisementsPT.find({ }).limit()
 
-        res.send(moves)
+        res.send(adverts)
     } catch (e) {
         console.log(e)
         res.status(500).send(e)
     }
 })
 
-// Get the machine that a move is performed on
-router.get('/moveMachine/:id', auth, async (req, res) => {
+router.delete('/advertisements/:id', auth, permit(''), async (req, res) => {
     try{
-        const move = await Move.findById(req.params.id)
-        await move.populate('moveMachine').execPopulate()
-        res.send(move.moveMachine)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
+        advert = await AdvertisementsPT.findOneAndDelete({ _id: req.params.id })
 
-router.delete('/moves/:id', auth, permit('Admin'), async (req, res) => {
-    try{
-        move = await Move.findOneAndDelete({ _id: req.params.id })
-
-        if(!move) {
+        if(!advert) {
             return res.status(404).send()
         }
 
-        res.send(move)
+        res.send(advert)
     } catch (e) {
         res.status(500).send(e)
     }
