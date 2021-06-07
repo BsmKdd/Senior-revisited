@@ -86,12 +86,6 @@ bartenderSchema.pre('remove', async function (next) {
     next()
 })
 
-// Connecting with the workouts
-memberSchema.virtual('.././workout/workout_types', { ref: 'assignedWorkout', localField: '_id', foreignField: 'member'})
-coachSchema.virtual('.././workout/workout_types', { ref: 'assignedWorkout', localField: '_id', foreignField: 'coach'})
-memberSchema.virtual('.././workout/workout_types', { ref: 'currentWorkout', localField: '_id', foreignField: 'member'})
-memberSchema.virtual('.././workout/workout_types', { ref: 'previousWorkout', localField: '_id', foreignField: 'member'})
-
 const Admin = mongoose.model('Admin', adminSchema)
 const Member = mongoose.model('Member', memberSchema)
 const Coach = mongoose.model('Coach', coachSchema)

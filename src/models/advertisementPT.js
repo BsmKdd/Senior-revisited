@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
 
 
 const advertisementPTSchema = new mongoose.Schema({
@@ -32,7 +33,7 @@ const advertisementPTSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    pic: {
+    image: {
         type: Buffer
     },
     banner: {
@@ -42,6 +43,6 @@ const advertisementPTSchema = new mongoose.Schema({
     timestamps: true
 })
 
-const advertisementPT = mongoose.model('advertisementPT', advertisementPTSchema)
+const AdvertisementsPT = mongoose.model('advertisementPT', advertisementPTSchema)
 
-module.exports = advertisementPT
+module.exports = AdvertisementsPT
