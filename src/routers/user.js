@@ -73,7 +73,6 @@ router.post('/bartenders', async (req, res) => {
             user
         })
     try{
-        console.log(user)
         await user.save()
         await bartender.save()
         // Send welcome email goes here

@@ -34,8 +34,7 @@ const menuItemSchema = new mongoose.Schema({
     stock: Number    
 })
 
-menuItemSchema.virtual('order', { ref: 'Order', localField: '_id', foreignField: 'item'})
 
-const menuItem = mongoose.model('menuItem', menuItemSchema)
+const MenuItem = mongoose.model('MenuItem', menuItemSchema)
 
-module.exports = menuItem
+module.exports = MenuItem
