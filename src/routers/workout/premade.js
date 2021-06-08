@@ -84,7 +84,7 @@ router.get('/premadeWorkouts', auth, async (req, res) => {
 router.delete('/premadeWorkouts/:id', auth, permit('Coach'), async (req, res) => {
     try{
         const premade = await PremadeWorkout.findOne({ _id: req.params.id })
-        await PremadeWorkout.deleteOne(premade)
+        await PremadeWorkout.deleteOne({ _id:premade._id, workout:premade.workout })
         
         if(!premade) {
             return res.status(404).send()
@@ -93,6 +93,25 @@ router.delete('/premadeWorkouts/:id', auth, permit('Coach'), async (req, res) =>
         res.send(premade)
     } catch (e) {
         res.status(500).send({error: e.message})
+    }
+})
+
+router.patch('/premadeWorkouts/:id', auth, permit('Coach'), async (req, res) => {
+    const updates = Object.keys(req.body)
+
+    try{
+        const premade = await PremadeWorkout.findOne({ _id: req.params.id })
+
+        if(!premade){
+            return res.status(404).send()
+        }
+
+        updates.forEach((update) => premade[update] = req.body[update])
+        await premade.save()
+
+        res.send(premade)
+    } catch (e) {
+        res.status(400).send(e)
     }
 })
 
