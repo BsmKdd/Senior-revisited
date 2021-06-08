@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Workout = require('./workout')
-const { Member, Coach, Bartender } = require('.././user/user_types')
 
 const assignedWorkoutSchema = new mongoose.Schema({
     workout: {
@@ -62,6 +61,11 @@ assignedWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout
 currentWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
 premadeWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
 previousWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
+
+premadeWorkoutSchema.pre('deleteOne', async function (next) {
+    await Workout.deleteOne({ _id: this._conditions.workout })
+    next()
+})
 
 const AssignedWorkout = mongoose.model('AssignedWorkout', assignedWorkoutSchema)
 const CurrentWorkout = mongoose.model('CurrentWorkout', currentWorkoutSchema)
