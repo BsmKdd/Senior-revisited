@@ -34,6 +34,7 @@ const currentWorkoutSchema = new mongoose.Schema({
 })
 
 const premadeWorkoutSchema = new mongoose.Schema({
+    workoutName: String,
     workout: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -57,14 +58,19 @@ const previousWorkoutSchema = new mongoose.Schema({
     }
 })
 
-const assignedWorkout = mongoose.model('assignedWorkout', assignedWorkoutSchema)
-const currentWorkout = mongoose.model('currentWorkout', currentWorkoutSchema)
-const premadeWorkout = mongoose.model('premadeWorkout', premadeWorkoutSchema)
-const previousWorkout = mongoose.model('previousWorkout', previousWorkoutSchema)
+assignedWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
+currentWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
+premadeWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
+previousWorkoutSchema.virtual('workout_', { ref: 'Workout', localField: 'workout', foreignField: '_id'})
+
+const AssignedWorkout = mongoose.model('AssignedWorkout', assignedWorkoutSchema)
+const CurrentWorkout = mongoose.model('CurrentWorkout', currentWorkoutSchema)
+const PremadeWorkout = mongoose.model('PremadeWorkout', premadeWorkoutSchema)
+const PreviousWorkout = mongoose.model('PreviousWorkout', previousWorkoutSchema)
 
 module.exports = {
-    assignedWorkout,
-    currentWorkout,
-    premadeWorkout,
-    previousWorkout
+    AssignedWorkout,
+    CurrentWorkout,
+    PremadeWorkout,
+    PreviousWorkout
 }
