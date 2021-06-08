@@ -67,6 +67,11 @@ premadeWorkoutSchema.pre('deleteOne', async function (next) {
     next()
 })
 
+assignedWorkoutSchema.pre('deleteOne', async function (next) {
+    await Workout.deleteOne({ _id: this._conditions.workout })
+    next()
+})
+
 const AssignedWorkout = mongoose.model('AssignedWorkout', assignedWorkoutSchema)
 const CurrentWorkout = mongoose.model('CurrentWorkout', currentWorkoutSchema)
 const PremadeWorkout = mongoose.model('PremadeWorkout', premadeWorkoutSchema)
