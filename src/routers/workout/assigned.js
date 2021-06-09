@@ -39,7 +39,7 @@ router.get('/assignedWorkouts/:id', auth, async (req, res) => {
             assigned.workout_[0].moves.forEach((move) => { move_ids.push(move.move) })
             
             const moves = await Move.find().where('_id').in(move_ids).exec()
-            console.log()
+
             res.send(moves) 
         } catch (e) {
             console.log(e.message)

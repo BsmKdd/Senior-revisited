@@ -10,6 +10,7 @@ const {
     } = require('../../models/workout/workout_types')
 const auth  = require('../../middleware/auth')
 const permit  = require('../../middleware/permit')
+
 const router = new express.Router()
 
 router.post('/assignedWorkouts', async (req, res) => {

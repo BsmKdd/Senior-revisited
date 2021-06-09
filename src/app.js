@@ -9,6 +9,7 @@ const advertisementPTRouter = require('./routers/advertisementspt')
 const messageRouter = require('./routers/message')
 const premadeRouter = require('./routers/workout/premade')
 const assignedRouter = require('./routers/workout/assigned')
+const currentRouter = require('./routers/workout/current')
 
 const app = express()
 
@@ -22,5 +23,6 @@ app.use(advertisementPTRouter)
 app.use(messageRouter)
 app.use(premadeRouter)
 app.use(assignedRouter)
+app.use(currentRouter)
 
 module.exports = app

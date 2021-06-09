@@ -20,6 +20,10 @@ const assignedWorkoutSchema = new mongoose.Schema({
 })
 
 const currentWorkoutSchema = new mongoose.Schema({
+    coach: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workout'
+    },
     workout: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -45,6 +49,11 @@ const premadeWorkoutSchema = new mongoose.Schema({
 })
 
 const previousWorkoutSchema = new mongoose.Schema({
+    workoutName:String,
+    coach: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Coach'
+    },
     workout: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
