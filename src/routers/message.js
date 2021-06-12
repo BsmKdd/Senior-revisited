@@ -1,48 +1,45 @@
-const express = require('express')
-const Message = require('../models/message')
-const auth  = require('../middleware/auth')
-const permit  = require('../middleware/permit')
+const express = require("express");
+const Message = require("../models/message");
+const auth = require("../middleware/auth");
+const permit = require("../middleware/permit");
 
-const router = new express.Router()
+const router = new express.Router();
 
-router.post('/messages', auth, async (req, res) => {
-    const message = new Message(req.body)
+router.post("/messages", auth, async (req, res) => {
+	const message = new Message(req.body);
 
-    try{
-        await message.save()
-        
-        res.status(201).send(message)
-    } catch (e) {
-        res.status(400).send({ error: e.message })
-    }
-}) 
+	try {
+		await message.save();
 
-router.get('/messages', auth, permit(''), async (req, res) => {
-    try{
-        messages = await Message.find({ }).limit()
+		res.status(201).send(message);
+	} catch (e) {
+		res.status(400).send({ error: e.message });
+	}
+});
 
-        res.send(messages)
-    } catch (e) {
-        console.log(e)
-        res.status(500).send(e)
-    }
-})
+router.get("/messages", auth, permit(""), async (req, res) => {
+	try {
+		messages = await Message.find({}).limit();
 
-router.delete('/messages/:id', auth, permit(''), async (req, res) => {
-    try{
-        message = await Message.findOneAndDelete({ _id: req.params.id })
+		res.send(messages);
+	} catch (e) {
+		console.log(e);
+		res.status(500).send(e);
+	}
+});
 
-        if(!message) {
-            return res.status(404).send()
-        }
+router.delete("/messages/:id", auth, permit(""), async (req, res) => {
+	try {
+		message = await Message.findOneAndDelete({ _id: req.params.id });
 
-        res.send(message)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
+		if (!message) {
+			return res.status(404).send();
+		}
 
+		res.send(message);
+	} catch (e) {
+		res.status(500).send(e);
+	}
+});
 
-
-
-module.exports = router
+module.exports = router;

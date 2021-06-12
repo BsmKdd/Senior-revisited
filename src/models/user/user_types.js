@@ -1,99 +1,98 @@
-const mongoose = require('mongoose')
-const User = require('./user')
-
+const mongoose = require("mongoose");
+const User = require("./user");
 
 const adminSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
-    }
-})
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+});
 
 // Member schema
 const memberSchema = new mongoose.Schema({
-    status: {
-        type: Boolean,
-        default: false,
-    },
-    expireDate: {
-        type: Date,
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
-    }
-})
+	status: {
+		type: Boolean,
+		default: false,
+	},
+	expireDate: {
+		type: Date,
+	},
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+});
 
 // Coach schema
 const coachSchema = new mongoose.Schema({
-    salary: {
-        type: Number,
-        required: true
-    },
-    expertises: [String],
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
-    }
-})
+	salary: {
+		type: Number,
+		required: true,
+	},
+	expertises: [String],
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+});
 
 //Bartender schema
 const bartenderSchema = new mongoose.Schema({
-    salary: {
-        type: Number,
-        required: true
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
-    }
-})
+	salary: {
+		type: Number,
+		required: true,
+	},
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+});
 
 // Delete the parent account if child is deleted
-adminSchema.pre('remove', async function (next) {
-    const admin = this
+adminSchema.pre("remove", async function (next) {
+	const admin = this;
 
-    await User.deleteOne({ admin: admin._id })
+	await User.deleteOne({ admin: admin._id });
 
-    next()
-})
+	next();
+});
 
-memberSchema.pre('remove', async function (next) {
-    const member = this
+memberSchema.pre("remove", async function (next) {
+	const member = this;
 
-    await User.deleteOne({ member: member._id })
+	await User.deleteOne({ member: member._id });
 
-    next()
-})
+	next();
+});
 
-coachSchema.pre('remove', async function (next) {
-    const coach = this
+coachSchema.pre("remove", async function (next) {
+	const coach = this;
 
-    await User.deleteOne({ coach: coach._id })
+	await User.deleteOne({ coach: coach._id });
 
-    next()
-})
+	next();
+});
 
-bartenderSchema.pre('remove', async function (next) {
-    const bartender = this
+bartenderSchema.pre("remove", async function (next) {
+	const bartender = this;
 
-    await User.deleteOne({ bartender: bartender._id })
+	await User.deleteOne({ bartender: bartender._id });
 
-    next()
-})
+	next();
+});
 
-const Admin = mongoose.model('Admin', adminSchema)
-const Member = mongoose.model('Member', memberSchema)
-const Coach = mongoose.model('Coach', coachSchema)
-const Bartender = mongoose.model('Bartender', bartenderSchema)
+const Admin = mongoose.model("Admin", adminSchema);
+const Member = mongoose.model("Member", memberSchema);
+const Coach = mongoose.model("Coach", coachSchema);
+const Bartender = mongoose.model("Bartender", bartenderSchema);
 
 module.exports = {
-    Admin,
-    Member,
-    Coach,
-    Bartender
-}
+	Admin,
+	Member,
+	Coach,
+	Bartender,
+};
